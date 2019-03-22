@@ -1,0 +1,19 @@
+{% if g.rooms == [] %}
+	<h4>没有人呢还</h4>
+{% else %}
+	<h1>激情聊天室</h1>
+
+	<ul class="room-list">
+	{% for i in g.rooms %}
+		<li class="room-list-item" title="{{getName(i.creator)}}">
+			<a href="{{ url_for('joinroom', rid=i.id) }}">
+			{{ i.roomname | striptags }}
+			</a> 
+			{{ i.created.strftime('%d %B %Y') }}
+			</li>
+	{% endfor %}
+	</ul>
+	
+	
+	<h4><a href="{{ url_for('newroom') }}">❤️开个新房间❤️</a></h4>
+{% endif %}

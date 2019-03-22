@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %} {{room.roomname}} - {{ super() }} {% endblock %}
+{% block head %}
+{#<script src="/static/ajax.js?{{ range(0, 99999) | random  }}" type="text/javascript"></script>#}
+<script src="{{ url_for('ajax') }}?{{ range(0, 99999) | random  }}" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block body %}
+
+	{% if room == [] %}
+		<h4>Room Not Found. This shouldn't happen</h4>
+	{% else %}	
+		<h6 class="mb-2">聊天室在线人数:
+			<span class="mr-3">{{ooxx}}人</span>
+			{% for o in others %}
+			<span class="mr-3">{{o}}</span>
+			{% endfor %}
+		</h6>
+		<table id="chat-table" class="table table-bordered w-100">
+			<tr><th class="w-25 text-center">基佬</th><th class="w-75 text-center">消息</th></tr>
+			{% for m in chats %}
+			{% if m.creator == g.user.id %}
+					<tr class="table-primary">
+			{% else %}
+					<tr class="table-secondary">
+			{% endif %}
+					<td class="w-25 text-center">{{getName(m.creator)}}</td>
+					<td title="{{m.created.strftime('%c')}}">{{ m.message }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<div class="text-center">
+			<textarea name="msg" rows="4" cols="50" minlength="1" maxlength="200" placeholder="Message" required/></textarea>
+			<br/><button class="btn btn-success" name="submitBtn" type="button">发送!!!</button>
+		</div>
+		
+		{% if room.creator == g.user.id %}
+			<form class="mt-5" method="post" action="{{url_for("rmroom")}}">
+				<button class="btn btn-danger col-8 offset-2" name="removeBtn" type="submit">删除房间</button>
+			</form>
+		{% endif %}
+	
+	{% endif %}
+
+{% endblock %}
